@@ -1,0 +1,66 @@
+I originally got this information from this Steam community post: https://steamcommunity.com/sharedfiles/filedetails/?id=2248906495
+Honestly, the tables look better there (ofc lol), but I saved 'em and the originally link so I wouldn't lose 'em :P
+
+Offset	Setting	Data type	Other notes
+0x00	Unknown	Unsure	Values below 03 cause issues with starting lobbies
+Values above 03 are reset to 03, and the language is set to Other for online lobbies. Most values seem to be reset to recommended settings - failsafe?
+0x01	Max Players	Uint8	Value of 00 will tell you that the game you attempted to join is full, and defaults your lobby language to portuguese. Only happens in online lobbies, local works fine.
+Value of 01 crashes the game when making an online lobby (local works fine).
+Values 02-0A work normally.
+Values above 0A in online lobbies results in error “Game options received were invalid” (local works).
+
+This interaction needs more testing with local play
+0x02 to 0x05	Chat language	Unsure	00 01 00 00 - English
+02 00 00 00 - Spanish
+04 00 00 00 - Korean
+08 00 00 00 - Russian
+10 00 00 00 - Portuguese
+20 00 00 00 - Arabic
+40 00 00 00 - Filipino
+80 00 00 00 - Polish
+01 00 00 00 - Other
+
+All other combinations of values result in “???” (no quotation marks)
+0x06	Level	Uint8	00 - The Skeld
+01 - Mira HQ
+02 - Polus
+
+Values above these are automatically set back to 00
+0x07 to 0x0A	Player speed	float32	Negative values invert controls, although lag compensation expects regular controls which can result in other players teleporting a lot.
+Extremely low/high values result in no movement whatsoever.
+0x0B to 0x0E	Crewmate vision	float32	Extremely high vision values make the user effectively blind minus very specific locations.
+Negative vision values function as normal although shadows are drawn with decreased accuracy.
+0 vision results in being unable to see anything (vents still can be viewed through fog of war)
+0x0F to 0x12	Impostor vision	float32	See “crewmate vision”
+0x13 to 0x16	Kill cooldown	float32	Negative values allow the impostor to instantaneously chain kills, bypassing even the 10 second starting cooldown.
+A value of 0 makes the kill button invisible for the impostor, but they can still kill with key shortcuts or possibly by clicking where the button normally is.
+Positive values work as intended.
+0x17	Common tasks	Uint8	If the game has run out of unique tasks to allocate, it will assign duplicates of already assigned tasks. These duplicate tasks have unique RNG - e.g wires will differ each time.
+Duplicate tasks must be solved one at a time.
+0x18	Long tasks	Uint8	See “common tasks”
+0x19	Short tasks	Uint8	See “common tasks”
+0x1A to 0x1D	Emergency meetings	int32	Negative values will not allow the crew to hold meetings.
+Values equal to and above 0 work as intended.
+0x1E	Impostor count	Uint8	01 - One impostor
+02 - Two impostors
+03 - Three impostors
+
+Other values are set to the closest valid value
+0x1F	Kill distance	Uint8	00 - Short
+01 - Medium
+02 - Long
+
+Values higher than this are set to 02
+0x20 to 0x23	Discussion time	int32	If this value is negative, the game will progress to voting time but add the amount of negative discussion time to the voting timer. With negative discussion time and positive voting time, this can result in meetings instantly moving to the post-vote stage.
+0x24 to 0x27	Voting time	int32	Negative values are displayed as infinity in the lobby, in the vote screen the timer is completely gone.
+0x28	Recommended settings	Uint8	00 - Off
+01 - On
+0x29	Emergency cooldown	Uint8	The emergency meeting in the first round will always have a cooldown of at least 10 seconds.
+0x2A	Confirm ejects	Uint8	00 - Off
+01 - On
+
+Values higher than this are set to 01
+0x2B	Visual tasks	Uint8	00 - Off
+01 - On
+
+Values higher than this are set to 01
