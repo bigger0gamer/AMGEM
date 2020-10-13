@@ -2,7 +2,7 @@ Quick Notes:
 
  - AMGEM requires Java JRE 11 or higher. 
  - AMGEM can keep save your rules as "gametype" for quick access when you want to quickly switch from one custom game to another. They are stored in the Gametypes folder, with every gametype having its own folder, and the respective gameHostOptions file stored inside. 
- - You can use the arguments "-ap" to send the absolute path of your Among Us save data folder (the one containing the gameHostOptions), if it isn't in the default location or your not using Windows. If in doubt, don't worry about it. 
+ - You can use the arguments "-ap" to send the absolute path of your Among Us save data folder (the one containing the gameHostOptions), if it isn't in the default location or you're not using Windows. Otherwise, AMGEM assumes the save data folder is in its default location. If in doubt, don't worry about it. 
 
 
  ~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~-~
