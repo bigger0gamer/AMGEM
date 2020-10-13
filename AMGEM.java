@@ -1,22 +1,16 @@
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.io.PrintWriter;
 import java.util.Scanner;
 import java.util.ArrayList;
-import java.nio.charset.Charset;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /* 
  * Program:     Among Us gameHostOptions Editor & Manager (AMGEM)
  * Author:      ~ ♀ Yuri Bacon ♀ ~
- * Description: A program that makes editing Among Us host settings easy, so not normally availabe option values are available to anyone who wants to host custom games better.
+ * Description: A program that makes editing Among Us host settings easy, so not normally availabe option values are available to anyone who wants to host custom games better & easier.
  * Date:        11 Oct 2020
  * 
  * Assume sus & never trust. Also assume they/them pronouns as default, that'd be great :)
@@ -31,7 +25,7 @@ class AMGEM
     String input = "";
     boolean quit = false;
     
-    //Creating the File variables for the gametypes folder
+    //Creating the File variables for the gametypes & save data folders
     File saveDataFolder;
     File gametypesFolder = new File("." + File.separator + "Gametypes");
     
@@ -90,7 +84,7 @@ class AMGEM
       //Processing the user input string, and executing the corresponding code blocks. Loops when any are finished
       if(input.equals("q") || input.equals("quit"))
       {
-        //Tells user to have fun with more Halo 2, and sets quit to true so the program will exit
+        //Tells user to have fun with more Among Us, and sets quit to true so the program will exit
         System.out.println("Leaving your task so fast? Thats pretty sus\n\nEnjoy custom Among Us~!");
         quit = true;
       }else if(input.equals("e") || input.equals("edit"))
@@ -148,14 +142,17 @@ class AMGEM
         System.out.println(" Done.");
       }else if(input.equals("n") || input.equals("new"))
       {
+        //variable to know if the name entered hasn't been used yet
         boolean validName = true;
         
         do
         {
+          //Reset the validName variable, prompt, and take input
           validName = true;
           System.out.print("Enter your gametype name: ");
           input = in.nextLine();
           
+          //If the name isn't emtpy, we check to see if there is any other gametype with the same name. If not it is valid, otherwise it isn't.
           if(!input.equals(""))
           {
             for(int i = 0; i < gametypes.size(); i++)
@@ -173,10 +170,12 @@ class AMGEM
           }
         }while(!validName);
         
+        //We add the name to the gametypes ArrayList, and make the corresponding directory for it
         gametypes.add(input);
         File newGametype = new File(gametypesFolder.getPath() + File.separator + input);
         newGametype.mkdirs();
         
+        //We take the current host options and swap them into the new gametype folder, then send it off to the edit method
         swapGametype(saveDataFolder.getPath(), newGametype.getPath() + File.separator + "gameHostOptions");
         editGametype(newGametype.getPath(), input);
         
@@ -186,6 +185,7 @@ class AMGEM
         System.out.println(" Done.");
       }else if(input.equals("h") || input.equals("help"))
       {
+        //help message :P
         System.out.println("AMGEM is a program to edit the file \"gameHostOptions\", which is where Among Us stores the game settings you last used when hosting a lobby.\nNamely, it allows you to edit various varables to values not normally allowed by the game, like:\n ~ Very short/long imposter kill times\n ~ Absurdly slow/fast movement speeds\n ~ Absurdly low/high crewmate/impostervision\n ~ Infinite voting time\n ~ Negative discussion time (votes end instantly)\n ~ And others\nThese options allow more options and flexibility when trying to play \"custom games\" like Hide & Seek or anything else your creativity can think up of.\nAMGEM also allows you to save your rules as \"gametypes\", so you can have the settings for many different custom games on hand and ready to use at any time, just requiring you to swap them in.\nNew Gametype will take your current gameHostOptions, save it as a gametype, and then let you edit it further.\nEdit gametype will take a gametype you already created and allow you to edit further.\nSwap gametype will take one of your gametypes and load them into your Among Us save data. Make sure to close Among Us before swapping in a gametype!");
       }else if(input.equals("s") || input.equals("swap"))
       {
@@ -341,8 +341,6 @@ class AMGEM
     ByteBuffer byteBuffer = ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN);
     
     //All of the gametype settings, listed in the order they appear in game (based on online lobby order of apperance)
-    //TODO: Load this shit lol
-    
     int map = gametype[6];
     int imposterCount = gametype[30];
     int maxPlayers = gametype[1];
@@ -364,7 +362,7 @@ class AMGEM
     int shortTasks = gametype[25];
     
     
-    //Now we can start the editing!! We present the user with all option category and take their input.
+    //Now we can start the editing!! We present the user with all the options and take their input.
     //I couldn't be bothered to actually comment all of this like I did for the main method.
     //Its tons of print() statements and nextLine() anyways :P There's tons of it there, but its not much to look at really. 
     boolean run = true;
@@ -1079,6 +1077,7 @@ class AMGEM
         e.printStackTrace();
       }
       
+      //let the user know we saved everything :)
       System.out.println("Changes to " + gametypeName + " have been saved successfully~!!\n");
     }
   }
@@ -1127,7 +1126,7 @@ class AMGEM
       System.err.println("Error! The first byte in this gametype did not start with 3! We have fixed this, but the gametype may be invalid or corrupt.");
     }
     
-    //We save the gametype we loaded up into the new gametype folder. If we generated a gametype hash, we save that too at the end of the file.
+    //We save the gametype we loaded up into the save data folder
     try
     {
       FileOutputStream fileStream = new FileOutputStream(outputFile);
